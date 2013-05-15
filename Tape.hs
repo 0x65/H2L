@@ -8,9 +8,13 @@ module Tape (
     , moveTapeRight
 ) where
 
+import Data.List (intercalate)
+
 -- | A data type for infinite tapes
 data Tape a = TapeI ([a], [a]) a
-    deriving (Show)
+
+instance Show a => Show (Tape a) where
+    show (TapeI (l, r) _) = intercalate " " $ map show $ reverse l ++ r
 
 -- | Constructs a tape from a (possibly empty) list of
 --   initial values and a default or "blank" value

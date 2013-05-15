@@ -13,7 +13,7 @@ newtype State = State (Tape Int, Program, Coordinate, Direction) deriving (Show)
 
 execute :: String -> IO ()
 execute input = do
-    let tape = (moveTapeRight . moveTapeRight) $ makeTape [0,maxBound::Int,0] 0
+    let tape = (moveTapeRight . moveTapeRight) $ makeTape [0,maxBound,0] 0
         program = parse input
         state = State (tape, program, (0,0), Down)
     (State (t, _, c, d)) <- run state
@@ -33,7 +33,6 @@ run :: State -> IO (State)
 run s@(State (_, _, (-1, _), _)) = return s    -- left coordinate out of bounds, stop execution
 run s@(State (_, _, (_, -1), _)) = return s    -- top coordinate out of bounds, stop execution
 run (State (tape, prog, pos, dir)) =
-    (putStrLn $ "Tape: " ++ show tape ++ " Pos: " ++ show pos ++ " Dir: " ++ show dir) >> 
     case symbolAt prog pos of
         NOP  -> run (State (tape, prog, next, dir))
         Star -> if (isTL1 tape && (dir == Left || dir == Right)) then   -- I/O action
